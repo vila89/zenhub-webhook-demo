@@ -9,7 +9,7 @@ var Octokit = require('@octokit/rest')
 const github = new Octokit({
     auth: process.env.GITHUB_TOKEN
 })
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 6000
 http.createServer(app).listen(port, function() {
   console.log('Listening on ', port);
 });
