@@ -1,23 +1,30 @@
-var express = require('express');
-var http = require('http');
-var bodyParser = require('body-parser');
-var app = express();
+var express = require('express')
+var http = require('http')
+var bodyParser = require('body-parser')
+var app = express()
 require('dotenv').config()
 
-var Octokit = require('@octokit/rest')
+const createApp = require('github-app')
 
-const github = new Octokit({
-    auth: process.env.GITHUB_TOKEN
+const githubApp = createApp({
+    id: process.env.APP_ID,
+    cert: process.env.APP_KEY
 })
+
 const port = process.env.PORT || 6000
 http.createServer(app).listen(port, function() {
-  console.log('Listening on ', port);
+  console.log('Listening on ', port)
 });
 
 app.use(bodyParser());
 
+app.post('/github-app', function(req, res) {
+    console.log("Installed app:")
+    console.log(req.body)
+})
+
 app.post('/', function(req, res) {
-  console.dir(req.body);
+  console.dir(req.body)
 
   var commentText = "This issue was moved to " + req.body.to_pipeline_name + " on ZenHub."
 
@@ -32,4 +39,4 @@ app.post('/', function(req, res) {
         console.log("ERROR:", err)
     })
 
-});
+})
