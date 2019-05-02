@@ -30,26 +30,30 @@ app.post('/github-app', function(req, res) {
 app.post('/', function(req, res) {
     console.dir(req.body)
 
-    var installation = await githubApp.asApp().then(github => {
-        var installations = await github.apps.getInstallations({})
-        console.log("Installations:")
-        console.log(installations)
-        return installations.find(install => {
-            return install.account.login === req.body.organization
+    githubApp.asApp().then(github => {
+        github.apps.getInstallations({}).then(installations => {
+            console.log("Installations:")
+            console.log(installations)
+            installations.find(install => {
+                return install.account.login === req.body.organization
+            })
+            var commentText = "This issue was moved to " + req.body.to_pipeline_name + " on ZenHub."
+
+            githubApp.asInstallation(installation.id).issues.createComment({
+                owner: req.body.organization,
+                repo: req.body.repo,
+                issue_number: req.body.issue_number,
+                body: commentText
+            }).then(({ data }) => {
+                console.log(data)
+            }).catch((err) => {
+                console.log("ERROR:", err)
+            })
+
         })
+
     })
 
-    var commentText = "This issue was moved to " + req.body.to_pipeline_name + " on ZenHub."
 
-    githubApp.asInstallation(installation.id).issues.createComment({
-        owner: req.body.organization,
-        repo: req.body.repo,
-        issue_number: req.body.issue_number,
-        body: commentText
-    }).then(({ data }) => {
-        console.log(data)
-    }).catch((err) => {
-        console.log("ERROR:", err)
-    })
 
 })
