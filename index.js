@@ -19,17 +19,29 @@ http.createServer(app).listen(port, function() {
 app.use(bodyParser());
 
 app.post('/github-app', function(req, res) {
-    console.log("Installed app:")
-    console.log(req.body)
+    if (req.body.action = 'created') {
+        console.log("Installed app:")
+        console.log(req.body)
+    }
+
     res.sendStatus(200)
 })
 
 app.post('/', function(req, res) {
-  console.dir(req.body)
+    console.dir(req.body)
 
-  var commentText = "This issue was moved to " + req.body.to_pipeline_name + " on ZenHub."
+    var installation = await githubApp.asApp().then(github => {
+        var installations = await github.apps.getInstallations({})
+        console.log("Installations:")
+        console.log(installations)
+        return installations.find(install => {
+            return install.account.login === req.body.organization
+        })
+    })
 
-    github.issues.createComment({
+    var commentText = "This issue was moved to " + req.body.to_pipeline_name + " on ZenHub."
+
+    githubApp.asInstallation(installation.id).issues.createComment({
         owner: req.body.organization,
         repo: req.body.repo,
         issue_number: req.body.issue_number,
