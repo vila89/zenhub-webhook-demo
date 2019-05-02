@@ -33,8 +33,8 @@ app.post('/', function(req, res) {
     githubApp.asApp().then(github => {
         github.apps.getInstallations({}).then(installations => {
             console.log("Installations:")
-            console.log(installations)
-            installations.find(install => {
+            console.log(installations.data)
+            installations.data.find(install => {
                 return install.account.login === req.body.organization
             })
             var commentText = "This issue was moved to " + req.body.to_pipeline_name + " on ZenHub."
