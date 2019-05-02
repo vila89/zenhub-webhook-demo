@@ -21,6 +21,7 @@ app.use(bodyParser());
 app.post('/github-app', function(req, res) {
     console.log("Installed app:")
     console.log(req.body)
+    res.sendStatus(200)
 })
 
 app.post('/', function(req, res) {
