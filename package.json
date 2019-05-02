@@ -21,6 +21,7 @@
     "@octokit/rest": "^16.25.1",
     "dotenv": "^7.0.0",
     "express": "^4.16.4",
+    "fs": "0.0.1-security",
     "github-app": "^4.0.1"
   }
 }

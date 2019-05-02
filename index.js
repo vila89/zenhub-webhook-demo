@@ -5,10 +5,12 @@ var app = express()
 require('dotenv').config()
 
 const createApp = require('github-app')
+const myCert = process.env.APP_KEY || require('fs').readFileSync('./private-key.pem')
+console.log(myCert)
 
 const githubApp = createApp({
     id: process.env.APP_ID,
-    cert: process.env.APP_KEY
+    cert: myCert
 })
 
 const port = process.env.PORT || 6000
@@ -38,16 +40,18 @@ app.post('/', function(req, res) {
                 return install.account.login === req.body.organization
             })
             var commentText = "This issue was moved to " + req.body.to_pipeline_name + " on ZenHub."
-
-            githubApp.asInstallation(installation.id).issues.createComment({
-                owner: req.body.organization,
-                repo: req.body.repo,
-                issue_number: req.body.issue_number,
-                body: commentText
-            }).then(({ data }) => {
-                console.log(data)
-            }).catch((err) => {
-                console.log("ERROR:", err)
+            console.log("Installation:", installation.id)
+            githubApp.asInstallation(installation.id).then(client => {
+                client.issues.createComment({
+                    owner: req.body.organization,
+                    repo: req.body.repo,
+                    number: req.body.issue_number,
+                    body: commentText
+                }).then(({ data }) => {
+                    console.log(data)
+                }).catch((err) => {
+                    console.log("ERROR:", err)
+                })
             })
 
         })
