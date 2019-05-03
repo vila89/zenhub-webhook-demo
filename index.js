@@ -6,7 +6,6 @@ require('dotenv').config()
 
 const createApp = require('github-app')
 const myCert = process.env.APP_KEY || require('fs').readFileSync('./private-key.pem')
-console.log(myCert)
 
 const githubApp = createApp({
     id: process.env.APP_ID,
