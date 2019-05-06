@@ -5,7 +5,8 @@ var app = express()
 require('dotenv').config()
 
 const createApp = require('github-app')
-const myCert = process.env.APP_KEY || require('fs').readFileSync('./private-key.pem')
+
+const myCert = process.env.PRIVATE_KEY || require('fs').readFileSync(process.env.PRIVATE_KEY_PATH)
 
 const githubApp = createApp({
     id: process.env.APP_ID,
@@ -46,8 +47,6 @@ app.post('/', function(req, res) {
                         repo: req.body.repo,
                         number: req.body.issue_number,
                         body: commentText
-                    }).then(({ data }) => {
-                        console.log(data)
                     }).catch((err) => {
                         console.log("ERROR:", err)
                     })
@@ -55,8 +54,4 @@ app.post('/', function(req, res) {
             })
         })
     }
-    
-
-
-
 })
