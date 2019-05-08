@@ -45,8 +45,8 @@ app.post('/', function(req, res) {
                 })
                 var commentText = "This issue was moved to " + req.body.to_pipeline_name + " on ZenHub."
                 console.log("Installation:", installation.id)
-                githubApp.asInstallation(installation.id).then(client => {
-                    client.issues.createComment({
+                githubApp.asInstallation(installation.id).then(octokit => {
+                    octokit.issues.createComment({
                         owner: req.body.organization,
                         repo: req.body.repo,
                         number: req.body.issue_number,
@@ -69,8 +69,8 @@ app.post('/', function(req, res) {
                 })
                 var commentText = "The estimate was changed to " + req.body.estimate + " on ZenHub."
                 console.log("Installation:", installation.id)
-                githubApp.asInstallation(installation.id).then(client => {
-                    client.issues.createComment({
+                githubApp.asInstallation(installation.id).then(octokit => {
+                    octokit.issues.createComment({
                         owner: req.body.organization,
                         repo: req.body.repo,
                         number: req.body.issue_number,
